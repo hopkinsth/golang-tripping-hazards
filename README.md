@@ -28,6 +28,44 @@ func myFunction(intArg int, stringArg string) (int, error) {
 	return intArg, nil // right after this, your deferred networkConn.Close() will execute
 }
 ```
+
+---
+**Interfaces are always pointers**: Consider the following example:
+```go
+package main
+
+import (
+	"fmt"
+)
+
+type Fooer interface {
+	Foo() int
+}
+
+type implementsFooer struct{
+	DataMember int
+}
+
+// provide the function foo to make your implementsFooer struct
+// implement Fooer. Note that this function has a non-pointer
+// receiver to an implementsFooer instance, we'll get to that
+// later
+func (f implementsFooer) Foo() int {
+	return f.DataMember
+}
+
+func WantsPointerToFooer(f *Fooer) {
+	fmt.Printf("I got a fooer, result of Foo() is %v\n", f.Foo())
+}
+
+func main(){
+	var myInstance Fooer // declare as type Fooer
+	myInstance = implementsFooer{DataMember: 5}
+	WantsPointerToFooer(&myInstance)
+}
+```
+It doesn't compile: *prog.go:24: f.Foo undefined (type *Fooer is pointer to interface, not interface).* This is because *myInstance* is of type interface, which is already a pointer. *WantsPointerToFooer* should actually accept *(f Fooer)* and you'll still get the pass-by-reference performance you're looking for.
+
 ---
 **The := symbol**: It's not an emoticon it's an assignment operator that automatically infers the type. In this way:
 ```go
