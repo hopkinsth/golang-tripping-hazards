@@ -42,15 +42,15 @@ type Fooer interface {
 	Foo() int
 }
 
-type implementsFooer struct{
+type ImplementsFooer struct{
 	DataMember int
 }
 
-// provide the function foo to make your implementsFooer struct
+// provide the function foo to make your ImplementsFooer struct
 // implement Fooer. Note that this function has a non-pointer
-// receiver to an implementsFooer instance, we'll get to that
+// receiver to an ImplementsFooer instance, we'll get to that
 // later
-func (f implementsFooer) Foo() int {
+func (f ImplementsFooer) Foo() int {
 	return f.DataMember
 }
 
@@ -60,11 +60,68 @@ func WantsPointerToFooer(f *Fooer) {
 
 func main(){
 	var myInstance Fooer // declare as type Fooer
-	myInstance = implementsFooer{DataMember: 5}
+	myInstance = ImplementsFooer{DataMember: 5}
 	WantsPointerToFooer(&myInstance)
 }
 ```
 It doesn't compile: *prog.go:24: f.Foo undefined (type *Fooer is pointer to interface, not interface).* This is because *myInstance* is of type interface, which is already a pointer. *WantsPointerToFooer* should actually accept *(f Fooer)* and you'll still get the pass-by-reference performance you're looking for.
+
+---
+**Pointer recievers, non-pointer receivers and the implementation of interfaces**
+Say you have an interface you'd like to implement. We'll use the Fooer interface from the previous example. If you've got a little Go under your belt already, your first instinct is to declare a member-function with a syntax like this:
+```go
+func (f *ImplementsFooer) Foo {...}
+```
+the bit between the *func* anc the *Foo* is called the receiver, and most of the time, when you declare a member-function, you have a pointer receiver. But if that's what you build, you're going to run into a problem like this:
+```go
+func main(){
+	var myInstance Fooer
+	myInstance = ImplementsFooer{DataMember: 5}
+	fmt.Printf("%v\n", myInstance)
+}
+```
+```
+cannot use ImplementsFooer literal (type ImplementsFooer) as type Fooer in assignment:
+	ImplementsFooer does not implement Fooer (Foo method has pointer receiver)
+```
+This is because you need a non-pointer receiver in order to implement an interface:
+```go
+func (f ImplementsFooer) Foo {...}
+```
+and that carries a **MAJOR** limitation, because the instance of ImplementsFooer (f) inside your function is a copy of the object you called it on. That means you cannot manipulate data-members in interface-functions, even inside your own struct.
+```go
+type Fooer interface {
+        Foo() int 
+        SetFoo(newFoo int)
+}
+
+type ImplementsFooer struct{
+        DataMember int 
+}
+
+func (f ImplementsFooer) Foo() int {
+        return f.DataMember
+}
+
+func (f ImplementsFooer) SetFoo(newDataMember int) {
+        f.DataMember = newDataMember
+        fmt.Printf("inside SetFoo, value of f.Foo() is %v\n", f.Foo())
+}
+
+func main(){
+        var myInstance Fooer
+        myInstance = ImplementsFooer{DataMember: 5}
+        fmt.Printf("initial value of Foo(): %v\n", myInstance.Foo())
+        myInstance.SetFoo(6)
+        fmt.Printf("just called myInstance.SetFoo(6), value of Foo(): %v\n", myInstance.Foo())
+}
+```
+this prints:
+```
+initial value of Foo()5
+inside SetFoo, value of f.Foo() is 6
+just called myInstance.SetFoo(6), value of Foo(): 5
+```
 
 ---
 **The := symbol**: It's not an emoticon it's an assignment operator that automatically infers the type. In this way:
