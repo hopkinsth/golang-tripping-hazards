@@ -7,10 +7,15 @@ We hope that by sharing this list we can save new Go developers some time hittin
 Compiled by Dan Miles: [Twitter](https://twitter.com/daniel_t_miles), [GitHub](https://github.com/danieltmiles)
 
 If you'd like to see some of our Open Source projects we've released in Go, check out:
+
 1. https://github.com/monsooncommerce/mockstomp We use it to mock a connection to a STOMP-compatable message broker for unit testing purposes
+
 2. https://github.com/monsooncommerce/log A logging library (yes, another one) that allows for networked-logging to a STOMP-compatable message broker
+
 3. https://github.com/monsooncommerce/stompWriter A short and simple Writer implementation we use with the logging library to write to STOMP-compatable message brokers
+
 4. https://github.com/monsooncommerce/mockwriter A way to mock-up a writer for the logger when unit testing.
+
 5. https://github.com/monsooncommerce/cryptoutil A simple wrapper to simplify some of Go's built-in cryptographic features (right now it only supports AES encrypt/decrypt).
 
 ---
