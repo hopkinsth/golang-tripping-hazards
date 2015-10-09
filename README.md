@@ -64,6 +64,7 @@ if err != nil {
 }
 ```
 (this prints we had an error)
+
 ---
 **Pointers** Pointers are always a tripping hazard for new developers, and Go is no exception. Instead of re-inventing that blog, I recommend you just go read this: https://www.golang-book.com/books/intro/8
 
