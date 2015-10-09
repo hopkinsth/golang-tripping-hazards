@@ -93,4 +93,5 @@ if result, err := someFunction(); err != nil {
 ```
 ---
 **Postfix Increments**: They're statements, not operators as they are in other languages. fmt.Printf("%v\n", foo++) doesn't work.
+
 ---
