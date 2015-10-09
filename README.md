@@ -72,7 +72,7 @@ Say you have an interface you'd like to implement. We'll use the Fooer interface
 ```go
 func (f *ImplementsFooer) Foo {...}
 ```
-the bit between the *func* anc the *Foo* is called the receiver, and most of the time, when you declare a member-function, you have a pointer receiver. But if that's what you build, you're going to run into a problem like this:
+the bit between the *func* and the *Foo* is called the receiver, and most of the time, when you declare a member-function, you have a pointer receiver. But if that's what you build, you're going to run into a problem like this:
 ```go
 func main(){
 	var myInstance Fooer
