@@ -1,6 +1,11 @@
-### Golang tripping hazards
+### Golang Tripping Hazards
 ---
-#####Any time I learn something new, I always end up finding a few things that I really wish someone had told me at the beginning. If you're starting to learn Go, perhaps you'll find these tidbits useful.
+#####As I learn something new about Go development, I always end up finding things that I really wish someone had told me at the beginning. If you're starting to learn Go, perhaps you'll find these tidbits useful.
+
+We hope that by sharing this list we can save new Go developers some time hitting their head against the keyboard. If you'd like to contribute something to the list, please send a Pull request.
+
+Compiled by Dan Miles [https://twitter.com/daniel_t_miles](Twitter), [https://github.com/danieltmiles](GitHub)
+
 ---
 **The defer statement**: A reserved word in Go that causes a function to execute as the last thing that happens when a function returns. You can stack as many as you want and they execute in the reverse order that they were declared. It looks something like this:
 ```go
