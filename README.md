@@ -67,8 +67,10 @@ if err != nil {
 ```
 ---
 **Pointers** Pointers are always a tripping hazard for new developers, and Go is no exception. Instead of re-inventing that blog, I recommend you just go read this: https://www.golang-book.com/books/intro/8
+
 ---
 **The Go compiler is more picky about style than other languages you may have worked with**: I don't have much concrete advice here, but it's something that bugged me when I started. If you're someone who likes your curly brackets ({) on the next line, that's a compile error, and you just have to learn to live with it. Fortunately, there's an automatic formatter called "fmt" that fixes everything for you. On the commandline, run: _go fmt_ and it will fix the formatting in all of your go files.
+
 ---
 **Same-line statements are possible but they can get confusing for scope reasons**: Go allows you to put multiple statements on the same line separated by semi-colons. I haven't seen this often, but there are a couple of cases where I do. You can use it to check to see if something is in a map:
 ```go
