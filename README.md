@@ -89,3 +89,6 @@ if result, err := someFunction(); err != nil {
 }
 // be aware that because result is declared inside an if-statement, it is not in scope outside the if-block.
 ```
+---
+**Postfix Increments**: They're statements, not operators as they are in other languages. fmt.Printf("%v\n", foo++) doesn't work.
+---
