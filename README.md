@@ -50,8 +50,8 @@ if err != nil {
 	fmt.Printf("we had an error")
 }
 ```
-====================================
 (this prints nothing)
+
 if you find yourself writing something like that, you probably meant this instead:
 ```go
 foo, err := someFunction() // err is nil
@@ -62,9 +62,8 @@ if true {
 if err != nil {
 	fmt.Printf("we had an error")
 }
-=================================
-(this prints we had an error)
 ```
+(this prints we had an error)
 ---
 **Pointers** Pointers are always a tripping hazard for new developers, and Go is no exception. Instead of re-inventing that blog, I recommend you just go read this: https://www.golang-book.com/books/intro/8
 
