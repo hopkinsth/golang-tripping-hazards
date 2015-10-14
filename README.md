@@ -1,6 +1,6 @@
 ### Golang Tripping Hazards
 ---
-#####As I learn something new about Go development, I always end up finding things that I really wish someone had told me at the beginning. If you're starting to learn Go, perhaps you'll find these tidbits useful.
+##### As I learn something new about Go development, I always end up finding things that I really wish someone had told me at the beginning. If you're starting to learn Go, perhaps you'll find these tidbits useful.
 
 We hope that by sharing this list we can save new Go developers some time hitting their head against the keyboard. If you'd like to contribute something to the list, please send a Pull request.
 
@@ -84,8 +84,11 @@ func main(){
 It doesn't compile: *prog.go:24: f.Foo undefined (type *Fooer is pointer to interface, not interface).* This is because *myInstance* is of type interface, which is already a pointer. *WantsPointerToFooer* should actually accept *(f Fooer)* and you'll still get the pass-by-reference performance you're looking for.
 
 ---
+
+
 **Pointer recievers, non-pointer receivers and the implementation of interfaces**
-Pointers and the base type they point to are distinct types in Go. Take our implementation of the `Fooer` interface in the previous example:
+
+Pointers and the base type they point to have distinct method sets in Go. Take our implementation of the `Fooer` interface in the previous example:
 
 ```go
 type Fooer interface {
@@ -134,7 +137,7 @@ func printFoo(f Fooer) {
 }
 ```
 
-This program will not compile, and the compiler will give you an error when you try to compile it:
+This program will not compile. The compiler will give you an error when you try to compile it:
 
 ```
 cannot use implFoo (type ImplementsFooer) as type Fooer in argument to printFoo:
