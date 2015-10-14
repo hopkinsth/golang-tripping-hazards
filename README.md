@@ -85,59 +85,71 @@ It doesn't compile: *prog.go:24: f.Foo undefined (type *Fooer is pointer to inte
 
 ---
 **Pointer recievers, non-pointer receivers and the implementation of interfaces**
-Say you have an interface you'd like to implement. We'll use the Fooer interface from the previous example. If you've got a little Go under your belt already, your first instinct is to declare a member-function with a syntax like this:
-```go
-func (f *ImplementsFooer) Foo {...}
-```
-the bit between the *func* and the *Foo* is called the receiver, and most of the time, when you declare a member-function, you have a pointer receiver. But if that's what you build, you're going to run into a problem like this:
-```go
-func main(){
-	var myInstance Fooer
-	myInstance = ImplementsFooer{DataMember: 5}
-	fmt.Printf("%v\n", myInstance)
-}
-```
-```
-cannot use ImplementsFooer literal (type ImplementsFooer) as type Fooer in assignment:
-	ImplementsFooer does not implement Fooer (Foo method has pointer receiver)
-```
-This is because you need a non-pointer receiver in order to implement an interface:
-```go
-func (f ImplementsFooer) Foo {...}
-```
-and that carries a **MAJOR** limitation, because the instance of ImplementsFooer (f) inside your function is a copy of the object you called it on. That means you cannot manipulate data-members in interface-functions, even inside your own struct.
+Pointers and the base type they point to are distinct types in Go. Take our implementation of the `Fooer` interface in the previous example:
+
 ```go
 type Fooer interface {
-        Foo() int 
-        SetFoo(newFoo int)
+  Foo() int
 }
 
 type ImplementsFooer struct{
-        DataMember int 
+  DataMember int
 }
 
 func (f ImplementsFooer) Foo() int {
-        return f.DataMember
-}
-
-func (f ImplementsFooer) SetFoo(newDataMember int) {
-        f.DataMember = newDataMember
-        fmt.Printf("inside SetFoo, value of f.Foo() is %v\n", f.Foo())
-}
-
-func main(){
-        var myInstance Fooer
-        myInstance = ImplementsFooer{DataMember: 5}
-        fmt.Printf("initial value of Foo(): %v\n", myInstance.Foo())
-        myInstance.SetFoo(6)
-        fmt.Printf("just called myInstance.SetFoo(6), value of Foo(): %v\n", myInstance.Foo())
+  return f.DataMember
 }
 ```
-this prints:
+
+`ImplementsFooer` and the pointer to that type, `*ImplementsFooer` are _distinct types_ in Go, and in this example only one of them implements the `Fooer` interface.
+
+Take this sample program for example:
+
 ```
-initial value of Foo()5
-inside SetFoo, value of f.Foo() is 6
-just called myInstance.SetFoo(6), value of Foo(): 5
+package main
+import "fmt"
+
+type Fooer interface {
+  Foo() int
+}
+
+type ImplementsFooer struct{
+  DataMember int
+}
+
+// implement the Fooer interface
+func (f *ImplementsFooer) Foo() int {
+  return f.DataMember
+}
+
+func main() {
+  implFoo := ImplementsFooer{35}
+  printFoo(implFoo)
+}
+
+// this function requires a 
+// type that implements Fooer
+func printFoo(f Fooer) {
+  fmt.Println(f.Foo())
+}
+```
+
+This program will not compile, and the compiler will give you an error when you try to compile it:
+
+```
+cannot use implFoo (type ImplementsFooer) as type Fooer in argument to printFoo:
+  ImplementsFooer does not implement Fooer (Foo method has pointer receiver)
+```
+
+In this case, the `*ImplementsFooer` type implements the interface, but the `ImplementsFooer` type does not – structs and a pointer to that struct are have two distinct method sets in Go.
+
+The simple fix for this example program is to pass a pointer into the `printFoo` function, like so:
+
+```go
+func main() {
+  implFoo := ImplementsFooer{35}
+  printFoo(&implFoo)
+}
 ```
 
 ---
