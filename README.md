@@ -88,7 +88,7 @@ It doesn't compile: *prog.go:24: f.Foo undefined (type *Fooer is pointer to inte
 
 **Pointer recievers, non-pointer receivers and the implementation of interfaces**
 
-Pointers and the base type they point to have distinct method sets in Go. Take our implementation of the `Fooer` interface in the previous example:
+Pointers and the base type they point to have distinct method sets in Go, and this affects how you implement an interface in Go. Let's use our implementation of the `Fooer` interface in the previous example:
 
 ```go
 type Fooer interface {
@@ -106,9 +106,9 @@ func (f ImplementsFooer) Foo() int {
 
 `ImplementsFooer` and the pointer to that type, `*ImplementsFooer` are _distinct types_ in Go, and in this example only one of them implements the `Fooer` interface.
 
-Take this sample program for example:
+Given that information, please look at this sample program:
 
-```
+```go
 package main
 import "fmt"
 
